@@ -1,5 +1,4 @@
-export interface AssetRetryState
-{
-    error: Error
-    retries: number
+export interface AssetRetryState {
+  error: Error;
+  retries: number;
 }

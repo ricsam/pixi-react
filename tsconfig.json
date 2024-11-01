@@ -10,10 +10,7 @@
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "lib": [
-      "DOM",
-      "ESNext",
-    ],
+    "lib": ["DOM", "ESNext"],
     "module": "ESNext",
     "moduleResolution": "node",
     "noUnusedLocals": true,
@@ -24,19 +21,8 @@
     "sourceMap": true,
     "strict": true,
     "target": "ESNext",
-    "types": [
-      "@testing-library/jest-dom",
-      "react",
-      "vite/client",
-      "vitest",
-    ],
+    "types": ["@testing-library/jest-dom", "react", "vite/client", "vitest"]
   },
-  "exclude": [
-    "dist",
-    "node_modules",
-    "types",
-  ],
-  "include": [
-    "./src/**/*",
-  ],
+  "exclude": ["dist", "node_modules", "types"],
+  "include": ["./src/**/*"]
 }

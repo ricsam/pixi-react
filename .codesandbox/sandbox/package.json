@@ -3,11 +3,11 @@
   "private": true,
   "main": "index.jsx",
   "dependencies": {
-      "pixi.js": "^8.0.0",
-      "@pixi/react": "^8.0.0",
-      "react": "^18.0.0",
-      "react-dom": "^18.0.0",
-      "react-scripts": "^5.0.0"
+    "pixi.js": "^8.0.0",
+    "@pixi/react": "^8.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "^5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

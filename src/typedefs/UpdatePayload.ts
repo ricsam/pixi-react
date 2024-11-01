@@ -1,7 +1,6 @@
-import type { DiffSet } from './DiffSet';
+import type { DiffSet } from "./DiffSet";
 
-export interface UpdatePayload
-{
-    diff?: DiffSet,
-    shouldReconstruct: boolean,
+export interface UpdatePayload {
+  diff?: DiffSet;
+  shouldReconstruct: boolean;
 }

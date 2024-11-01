@@ -1,4 +1,3 @@
-
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
@@ -11,10 +10,7 @@
     "emitDeclarationOnly": false,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "lib": [
-      "DOM",
-      "ESNext"
-    ],
+    "lib": ["DOM", "ESNext"],
     "module": "ESNext",
     "moduleResolution": "node",
     "noUnusedLocals": true,
@@ -26,13 +22,6 @@
     "strict": true,
     "target": "ESNext"
   },
-  "exclude": [
-    "dist",
-    "node_modules",
-    "types"
-  ],
-  "include": [
-    "./src/**/*",
-    "./test/**/*",
-  ]
+  "exclude": ["dist", "node_modules", "types"],
+  "include": ["./src/**/*", "./test/**/*"]
 }

@@ -1,114 +1,108 @@
-import {
-    Assets,
-    Cache,
-} from 'pixi.js';
-import { useState } from 'react';
-import { UseAssetsStatus } from '../constants/UseAssetsStatus';
-import { getAssetKey } from '../helpers/getAssetKey';
+import { Assets, Cache } from "pixi.js";
+import { useState } from "react";
+import { UseAssetsStatus } from "../constants/UseAssetsStatus";
+import { getAssetKey } from "../helpers/getAssetKey";
 
-import type { AssetRetryState } from '../typedefs/AssetRetryState';
-import type { UnresolvedAsset } from '../typedefs/UnresolvedAsset';
-import type { UseAssetsOptions } from '../typedefs/UseAssetsOptions';
-import type { UseAssetsResult } from '../typedefs/UseAssetsResult';
+import type { AssetRetryState } from "../typedefs/AssetRetryState";
+import type { UnresolvedAsset } from "../typedefs/UnresolvedAsset";
+import type { UseAssetsOptions } from "../typedefs/UseAssetsOptions";
+import type { UseAssetsResult } from "../typedefs/UseAssetsResult";
 
 const errorCache: Map<UnresolvedAsset, AssetRetryState> = new Map();
 
-function assetsLoadedTest<T>(asset: UnresolvedAsset<T>)
-{
-    return Cache.has(getAssetKey(asset));
+function assetsLoadedTest<T>(asset: UnresolvedAsset<T>) {
+  return Cache.has(getAssetKey(asset));
 }
 
 /** Loads assets, returning a hash of assets once they're loaded. */
 export function useAssets<T = any>(
-    /** @description Assets to be loaded. */
-    assets: UnresolvedAsset[],
+  /** @description Assets to be loaded. */
+  assets: UnresolvedAsset[],
 
-    /** @description Asset options. */
-    options: UseAssetsOptions = {},
-): UseAssetsResult<T>
-{
-    const [state, setState] = useState<UseAssetsResult<T>>({
-        assets: Array(assets.length).fill(undefined),
-        isError: false,
-        isPending: true,
+  /** @description Asset options. */
+  options: UseAssetsOptions = {},
+): UseAssetsResult<T> {
+  const [state, setState] = useState<UseAssetsResult<T>>({
+    assets: Array(assets.length).fill(undefined),
+    isError: false,
+    isPending: true,
+    isSuccess: false,
+    status: UseAssetsStatus.PENDING,
+  });
+
+  if (typeof window === "undefined") {
+    return state;
+  }
+
+  const {
+    maxRetries = 3,
+    onError,
+    onProgress,
+    retryOnFailure = true,
+  } = options;
+
+  const allAssetsAreLoaded = assets.some(assetsLoadedTest<T>);
+
+  if (!allAssetsAreLoaded) {
+    let cachedState = errorCache.get(assets);
+
+    // Rethrow the cached error if we are not retrying on failure or have reached the max retries
+    if (cachedState && (!retryOnFailure || cachedState.retries > maxRetries)) {
+      if (typeof onError === "function") {
+        onError(cachedState.error);
+      }
+
+      setState((previousState) => ({
+        ...previousState,
+        error: cachedState?.error,
+        isError: true,
+        isPending: false,
         isSuccess: false,
-        status: UseAssetsStatus.PENDING,
-    });
-
-    if (typeof window === 'undefined')
-    {
-        return state;
+        status: UseAssetsStatus.ERROR,
+      }));
     }
 
-    const {
-        maxRetries = 3,
-        onError,
-        onProgress,
-        retryOnFailure = true,
-    } = options;
+    Assets.load<T>(assets, (progressValue) => {
+      if (typeof onProgress === "function") {
+        onProgress(progressValue);
+      }
+    })
+      .then(() => {
+        const assetKeys = assets.map((asset: UnresolvedAsset<T>) =>
+          getAssetKey(asset),
+        );
+        const resolvedAssetsDictionary = Assets.get<T>(assetKeys) as Record<
+          string,
+          T
+        >;
 
-    const allAssetsAreLoaded = assets.some(assetsLoadedTest<T>);
-
-    if (!allAssetsAreLoaded)
-    {
-        let cachedState = errorCache.get(assets);
-
-        // Rethrow the cached error if we are not retrying on failure or have reached the max retries
-        if (cachedState && (!retryOnFailure || cachedState.retries > maxRetries))
-        {
-            if (typeof onError === 'function')
-            {
-                onError(cachedState.error);
-            }
-
-            setState((previousState) => ({
-                ...previousState,
-                error: cachedState?.error,
-                isError: true,
-                isPending: false,
-                isSuccess: false,
-                status: UseAssetsStatus.ERROR,
-            }));
+        setState((previousState) => ({
+          ...previousState,
+          assets: assets.map(
+            (_asset: UnresolvedAsset<T>, index: number) =>
+              resolvedAssetsDictionary[index],
+          ),
+          isError: false,
+          isPending: false,
+          isSuccess: true,
+          status: UseAssetsStatus.SUCCESS,
+        }));
+      })
+      .catch((error) => {
+        if (!cachedState) {
+          cachedState = {
+            error,
+            retries: 0,
+          };
         }
 
-        Assets.load<T>(assets, (progressValue) =>
-        {
-            if (typeof onProgress === 'function')
-            {
-                onProgress(progressValue);
-            }
-        })
-            .then(() =>
-            {
-                const assetKeys = assets.map((asset: UnresolvedAsset<T>) => getAssetKey(asset));
-                const resolvedAssetsDictionary = Assets.get<T>(assetKeys) as Record<string, T>;
+        errorCache.set(assets, {
+          ...cachedState,
+          error,
+          retries: cachedState.retries + 1,
+        });
+      });
+  }
 
-                setState((previousState) => ({
-                    ...previousState,
-                    assets: assets.map((_asset: UnresolvedAsset<T>, index: number) => resolvedAssetsDictionary[index]),
-                    isError: false,
-                    isPending: false,
-                    isSuccess: true,
-                    status: UseAssetsStatus.SUCCESS,
-                }));
-            })
-            .catch((error) =>
-            {
-                if (!cachedState)
-                {
-                    cachedState = {
-                        error,
-                        retries: 0,
-                    };
-                }
-
-                errorCache.set(assets, {
-                    ...cachedState,
-                    error,
-                    retries: cachedState.retries + 1,
-                });
-            });
-    }
-
-    return state;
+  return state;
 }

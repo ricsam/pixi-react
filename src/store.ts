@@ -1,5 +1,5 @@
 const store = {
-    debug: false,
+  debug: false,
 };
 
 export { store };

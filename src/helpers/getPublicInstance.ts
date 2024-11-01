@@ -1,8 +1,7 @@
-import { log } from './log';
+import { log } from "./log";
 
-export function getPublicInstance<T>(instance: T)
-{
-    log('info', 'lifecycle::getPublicInstance');
+export function getPublicInstance<T>(instance: T) {
+  log("info", "lifecycle::getPublicInstance");
 
-    return instance;
+  return instance;
 }

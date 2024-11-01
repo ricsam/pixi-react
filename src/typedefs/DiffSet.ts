@@ -1,6 +1,5 @@
-import type { Change } from './Change';
+import type { Change } from "./Change";
 
-export interface DiffSet
-{
-    changes: Change[],
+export interface DiffSet {
+  changes: Change[];
 }

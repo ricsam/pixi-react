@@ -39,34 +39,30 @@ If you want to start a new React project from scratch then we recommend [Create 
 To add to an existing React application, just install the dependencies:
 
 #### Install Pixi React Dependencies
+
 ```bash
 npm install pixi.js@^8.2.1 @pixi/react@beta
 ```
 
 #### Pixie React Usage
+
 ```jsx
-import {
-  Application,
-  extend,
-} from '@pixi/react'
-import {
-  Container,
-  Graphics,
-} from 'pixi.js'
-import { useCallback } from 'react'
+import { Application, extend } from "@pixi/react";
+import { Container, Graphics } from "pixi.js";
+import { useCallback } from "react";
 
 extend({
   Container,
   Graphics,
-})
+});
 
 const MyComponent = () => {
-  const drawCallback = useCallback(graphics => {
-    graphics.clear()
-    graphics.setFillStyle({ color: 'red' })
-    graphics.rect(0, 0, 100, 100)
-    graphics.fill()
-  }, [])
+  const drawCallback = useCallback((graphics) => {
+    graphics.clear();
+    graphics.setFillStyle({ color: "red" });
+    graphics.rect(0, 0, 100, 100);
+    graphics.fill();
+  }, []);
 
   return (
     <Application>
@@ -74,8 +70,8 @@ const MyComponent = () => {
         <graphics draw={drawCallback} />
       </container>
     </Application>
-  )
-}
+  );
+};
 ```
 
 ## Docs
@@ -87,14 +83,12 @@ One of the most important concepts to understand with Pixi React v8 is `extend`.
 To allow Pixi React to use a Pixi.js component, pass it to the `extend` API:
 
 ```jsx
-import { Container } from 'pixi.js'
-import { extend } from '@pixi/react'
+import { Container } from "pixi.js";
+import { extend } from "@pixi/react";
 
-extend({ Container })
+extend({ Container });
 
-const MyComponent = () => (
-  <container />
-)
+const MyComponent = () => <container />;
 ```
 
 > [!CAUTION]
@@ -109,15 +103,11 @@ The `<Application>` component is used to wrap your Pixi React app. The `<Applica
 ##### Example Usage
 
 ```jsx
-import { Application } from '@pixi/react'
+import { Application } from "@pixi/react";
 
 const MyComponent = () => {
-  return (
-    <Application
-      autoStart
-      sharedTicker />
-  )
-}
+  return <Application autoStart sharedTicker />;
+};
 ```
 
 ###### `attachToDevtools`
@@ -140,16 +130,16 @@ Setting `attachToDevtools` to `true` will automatically attach the application t
 The `<Application>` component supports the `resizeTo` property, with some additional functionality: it can accept any HTML element **or** it can take a React `ref` directly.
 
 ```jsx
-import { Application } from '@pixi/react'
-import { useRef } from 'react'
+import { Application } from "@pixi/react";
+import { useRef } from "react";
 const MyComponent = () => {
-  const parentRef = useRef(null)
+  const parentRef = useRef(null);
   return (
     <div ref={parentRef}>
       <Application resizeTo={parentRef} />
     </div>
-  )
-}
+  );
+};
 ```
 
 #### Pixi Components
@@ -172,14 +162,16 @@ The `graphics` component has a special `draw` property. `draw` takes a callback 
 ```jsx
 const MyComponent = () => {
   return (
-    <graphics draw={graphics => {
-      graphics.clear()
-      graphics.setFillStyle({ color: 'red' })
-      graphics.rect(0, 0, 100, 100)
-      graphics.fill()
-    }} />
-  )
-}
+    <graphics
+      draw={(graphics) => {
+        graphics.clear();
+        graphics.setFillStyle({ color: "red" });
+        graphics.rect(0, 0, 100, 100);
+        graphics.fill();
+      }}
+    />
+  );
+};
 ```
 
 > [!IMPORTANT]
@@ -190,16 +182,16 @@ const MyComponent = () => {
 Pixi React supports custom components via the `extend` API. For example, you can create a `<viewport>` component using the [`pixi-viewport`](https://github.com/davidfig/pixi-viewport) library:
 
 ```jsx
-import { extend } from '@pixi/react'
-import { Viewport } from 'pixi-viewport'
+import { extend } from "@pixi/react";
+import { Viewport } from "pixi-viewport";
 
-extend({ Viewport })
+extend({ Viewport });
 
 const MyComponent = () => {
   <viewport>
     <container />
-  </viewport>
-}
+  </viewport>;
+};
 ```
 
 ##### For Typescript Users
@@ -207,8 +199,8 @@ const MyComponent = () => {
 If you're using Typescript, this new `<viewport>` component will throw type errors. Pixi React exports a `PixiReactElementProps` type that can be used to solve this. You'll need to pass the `Viewport` into `PixiReactElementProps` and inject it into JSX:
 
 ```ts
-import type { PixiReactElementProps } from '@pixi/react'
-import type { Viewport } from 'pixi-viewport'
+import type { PixiReactElementProps } from "@pixi/react";
+import type { Viewport } from "pixi-viewport";
 
 declare global {
   namespace JSX {
@@ -232,44 +224,34 @@ declare global {
 For example, the following example `useApplication` **will not** be able to access the parent application:
 
 ```jsx
-import {
-  Application,
-  useApplication,
-} from '@pixi/react'
+import { Application, useApplication } from "@pixi/react";
 
 const ParentComponent = () => {
   // This will cause an invariant violation.
-  const { app } = useApplication()
+  const { app } = useApplication();
 
-  return (
-    <Application />
-  )
-}
+  return <Application />;
+};
 ```
 
 Here's a working example where `useApplication` **will** be able to access the parent application:
 
 ```jsx
-import {
-  Application,
-  useApplication,
-} from '@pixi/react'
+import { Application, useApplication } from "@pixi/react";
 
 const ChildComponent = () => {
-  const { app } = useApplication()
+  const { app } = useApplication();
 
-  console.log(app)
+  console.log(app);
 
-  return (
-    <container />
-  )
-}
+  return <container />;
+};
 
 const ParentComponent = () => (
   <Application>
     <ChildComponent />
   </Application>
-)
+);
 ```
 
 #### `useAsset`
@@ -314,41 +296,40 @@ const MyComponent = () => {
 `useAssets` can optionally accept a [`ProgressCallback`](https://pixijs.download/release/docs/assets.html#ProgressCallback) as a second argument. This callback will be called by the asset loader as the asset is loaded.
 
 ```jsx
-const bunnyTexture = useAssets('https://pixijs.com/assets/bunny.png', progress => {
-  console.log(`We have achieved ${progress * 100}% bunny.`)
-})
+const bunnyTexture = useAssets(
+  "https://pixijs.com/assets/bunny.png",
+  (progress) => {
+    console.log(`We have achieved ${progress * 100}% bunny.`);
+  },
+);
 ```
 
 #### `useSuspenseAssets`
 
 `useSuspenseAssets` is similar to the `useAssets` hook, except that it supports [React Suspense](https://react.dev/reference/react/Suspense). `useSuspenseAssets` accepts the same parameters as `useAssets`, but it only returns an array of the loaded assets. This is because given a suspense boundary it's possible to prevent components from rendering until they've finished loading their assets.
+
 > ```jsx
-> import {
-> 	Application,
-> 	useSuspenseAssets,
-> } from '@pixi/react'
+> import { Application, useSuspenseAssets } from "@pixi/react";
 >
-> import { Suspense } from 'react'
+> import { Suspense } from "react";
 >
 > const BunnySprite = () => {
-> 	const [bunnyTexture] = useSuspenseAssets(['https://pixijs.com/assets/bunny.png'])
+>   const [bunnyTexture] = useSuspenseAssets([
+>     "https://pixijs.com/assets/bunny.png",
+>   ]);
 >
-> 	return (
-> 		<sprite texture={bunnyTexture} />
-> 	)
-> }
+>   return <sprite texture={bunnyTexture} />;
+> };
 >
-> const LoadingText = () => (
-> 	<pixiText text={'Loading...'} />
-> )
+> const LoadingText = () => <pixiText text={"Loading..."} />;
 >
 > const MyApp = () => (
-> 	<Application>
-> 		<Suspense fallback={<LoadingText />}>
-> 			<BunnySprite />
-> 		</Suspense>
-> 	</Application>
-> )
+>   <Application>
+>     <Suspense fallback={<LoadingText />}>
+>       <BunnySprite />
+>     </Suspense>
+>   </Application>
+> );
 > ```
 
 #### `useExtend`
@@ -356,16 +337,14 @@ const bunnyTexture = useAssets('https://pixijs.com/assets/bunny.png', progress =
 `useExtend` allows the `extend` API to be used as a React hook. Additionally, the `useExtend` hook is memoised, while the `extend` function is not.
 
 ```jsx
-import { Container } from 'pixi.js'
-import { useExtend } from '@pixi/react'
+import { Container } from "pixi.js";
+import { useExtend } from "@pixi/react";
 
 const MyComponent = () => {
-  useExtend({ Container })
+  useExtend({ Container });
 
-  return (
-    <container />
-  )
-}
+  return <container />;
+};
 ```
 
 #### `useTick`
@@ -373,11 +352,11 @@ const MyComponent = () => {
 `useTick` allows a callback to be attached to the [`Ticker`](https://pixijs.download/release/docs/ticker.Ticker.html) on the parent application.
 
 ```jsx
-import { useTick } from '@pixi/react'
+import { useTick } from "@pixi/react";
 
 const MyComponent = () => {
-  useTick(() => console.log('This will be logged on every tick'))
-}
+  useTick(() => console.log("This will be logged on every tick"));
+};
 ```
 
 `useTick` optionally takes an options object. This allows control of all [`ticker.add`](https://pixijs.download/release/docs/ticker.Ticker.html#add) options, as well as adding the `isEnabled` option. Setting `isEnabled` to `false` will cause the callback to be disabled until the argument is changed to true again.
@@ -399,31 +378,34 @@ const MyComponent = () => {
 
 > [!CAUTION]
 > The callback passed to `useTick` **is not memoised**. This can cause issues where your callback is being removed and added back to the ticker on every frame if you're mutating state in a component where `useTick` is using a non-memoised function. For example, this issue would affect the component below because we are mutating the state, causing the component to re-render constantly:
+>
 > ```jsx
-> import { useState } from 'react'
-> import { useTick } from '@pixi/react'
+> import { useState } from "react";
+> import { useTick } from "@pixi/react";
 >
 > const MyComponent = () => {
->   const [count, setCount] = useState(0)
+>   const [count, setCount] = useState(0);
 >
->   useTick(() => setCount(previousCount => previousCount + 1))
+>   useTick(() => setCount((previousCount) => previousCount + 1));
 >
->   return null
-> }
+>   return null;
+> };
 > ```
+>
 > This issue can be solved by memoising the callback passed to `useTick`:
+>
 > ```jsx
-> import {
->   useCallback,
->   useState,
-> } from 'react'
-> import { useTick } from '@pixi/react'
+> import { useCallback, useState } from "react";
+> import { useTick } from "@pixi/react";
 >
 > const MyComponent = () => {
->   const [count, setCount] = useState(0)
+>   const [count, setCount] = useState(0);
 >
->   const updateCount = useCallback(() => setCount(previousCount => previousCount + 1), [])
+>   const updateCount = useCallback(
+>     () => setCount((previousCount) => previousCount + 1),
+>     [],
+>   );
 >
->   useTick(updateCount)
-> }
+>   useTick(updateCount);
+> };
 > ```
