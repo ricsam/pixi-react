@@ -15,21 +15,9 @@
     "url": "git+https://github.com/pixijs/pixi-react.git"
   },
   "license": "MIT",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./types/index.d.ts",
-        "default": "./lib/index.mjs"
-      },
-      "require": {
-        "types": "./types/index.d.ts",
-        "default": "./lib/index.js"
-      }
-    }
-  },
-  "main": "lib/index.js",
-  "module": "lib/index.mjs",
-  "types": "types/index.d.ts",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
   "files": [
     "lib",
     "dist",
