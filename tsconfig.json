@@ -25,10 +25,7 @@
     "strict": true,
     "target": "ESNext",
     "types": [
-      "@testing-library/jest-dom",
-      "react",
-      "vite/client",
-      "vitest",
+      "react"
     ],
   },
   "exclude": [
